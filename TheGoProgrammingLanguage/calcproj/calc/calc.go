@@ -24,8 +24,8 @@ func main() {
 				fmt.Println("USAGE: calc add <integer1><integer2>")
 				return
 			}
-			v1, err1 := strconv.Atoi(args[1])
-			v2, err2 := strconv.Atoi(args[2])
+			v1, err1 := strconv.Atoi(args[2])
+			v2, err2 := strconv.Atoi(args[3])
 			if err1 != nil || err2 != nil {
 				fmt.Println("USAGE: calc add <integer1><integer2>")
 			}
@@ -36,7 +36,7 @@ func main() {
 				fmt.Println("USAGE: calc sqrt <integer>")
 				return
 			}
-			v, err := strconv.Atoi(args[1])
+			v, err := strconv.Atoi(args[2])
 			if err != nil {
 				fmt.Println("USAGE: calc sqrt <integer>")
 				return
