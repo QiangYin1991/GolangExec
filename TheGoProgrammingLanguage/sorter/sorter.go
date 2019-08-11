@@ -7,6 +7,10 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"time"
+
+	"TheGoProgrammingLanguage/sorter/algorithm/bubblesort"
+	"TheGoProgrammingLanguage/sorter/algorithm/qsort"
 )
 
 var infile *string = flag.String("i", "infile", "File contains values for sorting")
@@ -80,6 +84,19 @@ func main() {
 	values, err := readValues(*infile)
 	if err == nil {
 		fmt.Println("Read values:", values)
+		t1 := time.Now()
+		switch *algorithm {
+		case "qsort":
+			qsort.QuickSort(values)
+		case "bubblesort":
+			bubblesort.BubbleSort(values)
+		default:
+			fmt.Println("Sorting algorithm ", *algorithm, " is either unknown or unsupported.")
+		}
+		t2 := time.Now()
+		fmt.Println("The sorting process costs: ", t2.Sub(t1), " to complete.")
+		fmt.Println("The sorting valuses: ", values)
+		writeValues(values, *outfile)
 	} else {
 		fmt.Println(err)
 	}
