@@ -41,8 +41,16 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func ViewHandler(w http.ResponseWriter, r *http.Request) {
+	imageId := r.FormValue("id")
+	imagePath := UPLOAD_DIR + "/" + imageId
+	w.Header().Set("Content-Type", "image")
+	http.ServeFile(w, r, imagePath)
+}
+
 func main() {
-	http.HandleFunc("upload", UploadHandler)
+	http.HandleFunc("/view", ViewHandler)
+	http.HandleFunc("/upload", UploadHandler)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err.Error())
