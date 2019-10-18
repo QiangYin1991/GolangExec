@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-18 14:21:25
- * @LastEditTime: 2019-10-18 14:21:25
- * @LastEditors: your name
+ * @LastEditTime: 2019-10-18 16:44:07
+ * @LastEditors: Please set LastEditors
  */
 package main
 
@@ -51,8 +51,20 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 func ViewHandler(w http.ResponseWriter, r *http.Request) {
 	imageId := r.FormValue("id")
 	imagePath := UPLOAD_DIR + "/" + imageId
+	if exists := isExists(imagePath); !exists {
+		http.NotFound(w, r)
+		return
+	}
 	w.Header().Set("Content-Type", "image")
 	http.ServeFile(w, r, imagePath)
+}
+
+func isExists(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	return os.IsExist(err)
 }
 
 func main() {
