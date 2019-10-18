@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-18 14:21:25
- * @LastEditTime: 2019-10-18 17:38:50
+ * @LastEditTime: 2019-10-18 17:51:13
  * @LastEditors: Please set LastEditors
  */
 package main
@@ -22,12 +22,10 @@ const (
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		t, err := template.ParseFiles("upload.html")
-		if err != nil {
+		if err := renderHtml(w, "upload", nil); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		t.Execute(w, nil)
 		return
 	} else if r.Method == "POST" {
 		f, h, err := r.FormFile("image")
@@ -82,12 +80,19 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 		images = append(images, fileInfo.Name())
 	}
 	locals["images"] = images
-	t, err := template.ParseFiles("list.html")
-	if err != nil {
+	if err = renderHtml(w, "list", locals); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	t.Execute(w, locals)
+}
+
+func renderHtml(w http.ResponseWriter, tmpl string, locals map[string]interface{}) err error {
+	t, err = template.ParseFiles(tmpl + ".html")
+	if err != nil {
+		return err
+	}
+	err = t.Execute(w, locals)
+	return err
 }
 
 func main() {
