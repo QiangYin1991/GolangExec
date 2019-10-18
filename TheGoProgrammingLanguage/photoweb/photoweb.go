@@ -2,12 +2,13 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-18 14:21:25
- * @LastEditTime: 2019-10-18 17:23:45
+ * @LastEditTime: 2019-10-18 17:38:50
  * @LastEditors: Please set LastEditors
  */
 package main
 
 import (
+	"html/template"
 	"io"
 	"io/ioutil"
 	"log"
@@ -21,11 +22,12 @@ const (
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		io.WriteString(w, "<html><form method = \"POST\" action = \"upload\" "+
-			" enctype = \"multipart/form-data\">"+
-			"Choose an image to upload: <input name = \"image\" type = \"file\" />"+
-			"<input type = \"submit\" value = \"upload\" />"+
-			"</form></html>")
+		t, err := template.ParseFiles("upload.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		t.Execute(w, nil)
 		return
 	} else if r.Method == "POST" {
 		f, h, err := r.FormFile("image")
@@ -74,13 +76,18 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	var listHtml string
+	locals := make(map[string]interface{})
+	images := []string{}
 	for _, fileInfo := range fileInfoArr {
-		imgId := fileInfo.Name()
-		listHtml += "<li><a href=\"/view?id=" + imgId + "\">" + imgId + "</a></li>"
+		images = append(images, fileInfo.Name())
 	}
-	io.WriteString(w, "<html><ol>"+listHtml+"</ol></html>")
+	locals["images"] = images
+	t, err := template.ParseFiles("list.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	t.Execute(w, locals)
 }
 
 func main() {
