@@ -14,11 +14,33 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 )
 
 const (
-	UPLOAD_DIR = "./uploads"
+	UPLOAD_DIR   = "./uploads"
+	TEMPLATE_DIR = "./views"
 )
+
+var templates = make(map[string]*template.Template)
+
+func init() {
+	fileInfoArr, err := ioutil.ReadDir(TEMPLATE_DIR)
+	if err != nil {
+		panic(err)
+	}
+	var templateName, templatePath string
+	for _, fileInfo := range fileInfoArr {
+		templateName = fileInfo.Name()
+		if ext := path.Ext(templateName); ext != ".html" {
+			continue
+		}
+		templatePath = TEMPLATE_DIR + "/" + templateName
+		log.Println("Loading template: ", templatePath)
+		t := template.Must(template.ParseFiles(templatePath))
+		templates[templateName] = t
+	}
+}
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -87,15 +109,12 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func renderHtml(w http.ResponseWriter, tmpl string, locals map[string]interface{}) error {
-	t, err := template.ParseFiles(tmpl + ".html")
-	if err != nil {
-		return err
-	}
-	err = t.Execute(w, locals)
+	err := templates[tmpl].Execute(w, locals)
 	return err
 }
 
 func main() {
+	init()
 	http.HandleFunc("/", listHandler)
 	http.HandleFunc("/view", viewHandler)
 	http.HandleFunc("/upload", uploadHandler)
