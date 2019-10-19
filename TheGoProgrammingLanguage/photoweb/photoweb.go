@@ -114,7 +114,6 @@ func renderHtml(w http.ResponseWriter, tmpl string, locals map[string]interface{
 }
 
 func main() {
-	init()
 	http.HandleFunc("/", listHandler)
 	http.HandleFunc("/view", viewHandler)
 	http.HandleFunc("/upload", uploadHandler)
