@@ -86,8 +86,8 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func renderHtml(w http.ResponseWriter, tmpl string, locals map[string]interface{}) err error {
-	t, err = template.ParseFiles(tmpl + ".html")
+func renderHtml(w http.ResponseWriter, tmpl string, locals map[string]interface{}) error {
+	t, err := template.ParseFiles(tmpl + ".html")
 	if err != nil {
 		return err
 	}
