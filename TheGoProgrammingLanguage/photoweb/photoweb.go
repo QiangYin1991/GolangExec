@@ -44,7 +44,7 @@ func init() {
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		if err := renderHtml(w, "upload", nil); err != nil {
+		if err := renderHtml(w, "upload.html", nil); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -102,7 +102,7 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 		images = append(images, fileInfo.Name())
 	}
 	locals["images"] = images
-	if err = renderHtml(w, "list", locals); err != nil {
+	if err = renderHtml(w, "list.html", locals); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
