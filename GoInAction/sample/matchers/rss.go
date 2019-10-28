@@ -12,7 +12,7 @@ import (
 
 type (
 	item struct {
-		XMLName     xml.Name `xml:"name"`
+		XMLName     xml.Name `xml:"item"`
 		PubDate     string   `xml:"pubDate"`
 		Title       string   `xml:"title"`
 		Description string   `xml:"description"`
@@ -22,14 +22,14 @@ type (
 	}
 
 	image struct {
-		XMLName xml.Name `xml:"name"`
+		XMLName xml.Name `xml:"image"`
 		URL     string   `xml:"url"`
 		Title   string   `xml:"title"`
 		Link    string   `xml:"link"`
 	}
 
 	channel struct {
-		XMLName        xml.Name `xml:"name"`
+		XMLName        xml.Name `xml:"channel"`
 		Title          string   `xml:"title"`
 		Description    string   `xml:"description"`
 		Link           string   `xml:"link"`
@@ -39,8 +39,8 @@ type (
 		Language       string   `xml:"language"`
 		ManagingEditor string   `xml:"managingEditor"`
 		WebMaster      string   `xml:"webMaster"`
-		Image          string   `xml:"image"`
-		Item           string   `xml:"item"`
+		Image          image    `xml:"image"`
+		Item           []item   `xml:"item"`
 	}
 
 	rssDocument struct {
@@ -97,7 +97,7 @@ func (m rssMatcher) Search(feed *search.Feed, searchTerm string) ([]*search.Resu
 			})
 		}
 
-		matched, err := regexp.MatchString(searchTerm, channelItem.Description)
+		matched, err = regexp.MatchString(searchTerm, channelItem.Description)
 		if err != nil {
 			return nil, err
 		}
