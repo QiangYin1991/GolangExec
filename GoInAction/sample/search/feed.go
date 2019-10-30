@@ -9,7 +9,7 @@ const dataFile = "data\\data.json"
 
 type Feed struct {
 	Name string `json:"site"`
-	URI  string `json:"link`
+	URI  string `json:"link"`
 	Type string `json:"type"`
 }
 
@@ -22,6 +22,5 @@ func RetrieveFeeds() ([]*Feed, error) {
 
 	var feeds []*Feed
 	err = json.NewDecoder(file).Decode(&feeds)
-
 	return feeds, err
 }
