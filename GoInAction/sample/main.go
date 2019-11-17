@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "GoInAction/sample/matchers"
 	"GoInAction/sample/search"
 	"log"
 	"os"
