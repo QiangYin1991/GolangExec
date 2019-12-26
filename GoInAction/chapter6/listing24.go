@@ -9,7 +9,7 @@ import (
 
 const (
 	numberGoroutines = 4
-	taskLoad = 10
+	taskLoad         = 10
 )
 
 var wg sync.WaitGroup
@@ -47,7 +47,7 @@ func worker(tasks chan string, worker int) {
 
 		sleep := rand.Int63n(100)
 		time.Sleep(time.Duration(sleep) * time.Millisecond)
-		
+
 		fmt.Printf("Worker: %d : Completed %s\n", worker, task)
 	}
 }
