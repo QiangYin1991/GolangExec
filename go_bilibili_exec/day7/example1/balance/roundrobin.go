@@ -4,11 +4,15 @@ import (
 	"errors"
 )
 
+func init() {
+	RegisterBalancer("roundrobin", &RoundRobinBalance{})
+}
+
 type RoundRobinBalance struct {
 	curIndex int
 }
 
-func (p *RoundRobinBalance) DoBalance(insts []*Instance) (inst *Instance, err error) {
+func (p *RoundRobinBalance) DoBalance(insts []*Instance, key ...string) (inst *Instance, err error) {
 	if len(insts) == 0 {
 		err = errors.New("No instance")
 		return

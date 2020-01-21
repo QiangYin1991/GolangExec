@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	. "src/go_bilibili_exec/day7/example1/balance"
 	"time"
 )
@@ -15,9 +16,13 @@ func main() {
 		insts = append(insts, one)
 	}
 
-	balancer := &RandomBalance{}
+	var balanceName string
+	if len(os.Args) > 1 {
+		balanceName = os.Args[1]
+	}
+
 	for {
-		inst, err := balancer.DoBalance(insts)
+		inst, err := DoBalance(balanceName, insts)
 		if err != nil {
 			fmt.Println("do balance err:", err)
 			continue
