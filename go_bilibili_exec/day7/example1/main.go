@@ -16,7 +16,7 @@ func main() {
 		insts = append(insts, one)
 	}
 
-	var balanceName string
+	balanceName := "hash"
 	if len(os.Args) > 1 {
 		balanceName = os.Args[1]
 	}
