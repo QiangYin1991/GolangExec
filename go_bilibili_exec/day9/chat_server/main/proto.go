@@ -15,3 +15,8 @@ type LoginCmd struct {
 type RegisterCmd struct {
 	User model.User `json:"user"`
 }
+
+type LoginCmdRes struct {
+	Code int `json:"code"`
+	Error string `json:"error"`
+}
