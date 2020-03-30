@@ -1,6 +1,7 @@
 package gee
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"path"
@@ -17,13 +18,15 @@ type RouteGroup struct {
 
 type Engine struct {
 	*RouteGroup
-	router *router
-	groups []*RouteGroup
+	router        *router
+	groups        []*RouteGroup
+	htmlTemplates *template.Template
+	funcMap       template.FuncMap
 }
 
 func New() *Engine {
 	engine := &Engine{router: newRouter()}
-	engine.RouteGroup = &RouteGroup{engine:engine}
+	engine.RouteGroup = &RouteGroup{engine: engine}
 	engine.groups = []*RouteGroup{engine.RouteGroup}
 	return engine
 }
@@ -31,8 +34,8 @@ func New() *Engine {
 func (g *RouteGroup) Group(prefix string) *RouteGroup {
 	engine := g.engine
 	newGroup := &RouteGroup{
-		prefix:      g.prefix + prefix,
-		engine:      engine,
+		prefix: g.prefix + prefix,
+		engine: engine,
 	}
 
 	engine.groups = append(engine.groups, newGroup)
@@ -91,5 +94,14 @@ func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	c := newContext(w, req)
 	c.handlers = middlewares
+	c.engine = engine
 	engine.router.handle(c)
+}
+
+func (engine *Engine) SetFunMap(funcMap template.FuncMap) {
+	engine.funcMap = funcMap
+}
+
+func (engine *Engine) LoadHTMLGlob(pattern string) {
+	engine.htmlTemplates = template.Must(template.New("").Funcs(engine.funcMap).ParseGlob(pattern))
 }
