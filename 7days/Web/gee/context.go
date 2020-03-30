@@ -84,7 +84,7 @@ func (c *Context) Data(code int, data []byte) {
 func (c *Context) HTML(code int, html string, data interface{}) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
-	if err := c.engine.htmlTemplates.ExecuteTemplate(c.Writer, name, data); err != nil {
+	if err := c.engine.htmlTemplates.ExecuteTemplate(c.Writer, html, data); err != nil {
 		c.Fail(500, err.Error())
 	}
 }
