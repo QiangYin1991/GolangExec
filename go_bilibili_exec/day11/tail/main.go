@@ -2,20 +2,20 @@ package main
 
 import (
 	"fmt"
-	"github.com/hpcloud/tail"
+	"github.com/qiangyin1991/tail"
 	"time"
 )
 
-func main()  {
+func main() {
 	filename := "my.log"
 	tails, err := tail.TailFile(filename, tail.Config{
 		Location:    nil,
-		ReOpen:      true,
+		ReOpen:      false,
 		MustExist:   false,
-		Poll:        true,
+		Poll:        false,
 		Pipe:        false,
 		RateLimiter: nil,
-		Follow:      true,
+		Follow:      false,
 		MaxLineSize: 0,
 		Logger:      nil,
 	})
@@ -30,8 +30,15 @@ func main()  {
 		if !ok {
 			fmt.Printf("tail file close reopen, filename:%s\n", tails.Filename)
 			time.Sleep(100 * time.Millisecond)
-			continue
+			break
 		}
-		fmt.Println("msg: ", msg)
+		fmt.Println("msg: ", msg.Text)
 	}
+	//for line := range tails.Lines {
+	//	fmt.Println(line.Text)
+	//}
+	//err = tails.Wait()
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
 }
