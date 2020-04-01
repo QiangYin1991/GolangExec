@@ -11,7 +11,7 @@ func main()  {
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.Return.Successes = true
 
-	client, err := sarama.NewSyncProducer([]string{"10.18.29.150:9092"}, config)
+	client, err := sarama.NewSyncProducer([]string{""}, config)
 	if err != nil {
 		fmt.Println("producer close, err:", err)
 		return
