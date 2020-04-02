@@ -29,4 +29,11 @@ func main() {
 	logs.Debug("init tailf succ")
 
 	logs.Debug("initialize success")
+
+	err = serverRun()
+	if err != nil {
+		logs.Error("serverRun failed, err:%v", err)
+		return
+	}
+	logs.Info("program exit")
 }
