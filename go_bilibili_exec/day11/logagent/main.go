@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
+	"src/go_bilibili_exec/day11/logagent/tailf"
 )
 
 func main() {
@@ -13,14 +14,19 @@ func main() {
 		panic("load conf failed")
 		return
 	}
-
 	err = initLogger()
 	if err != nil {
 		fmt.Printf("load logger failed, err:%v\n", err)
 		panic("load logger failed")
 		return
 	}
+	logs.Debug("load conf succ, config:%v", appConfig)
+	err = tailf.InitTail(appConfig.CollectConf)
+	if err != nil {
+		logs.Error("init tail failed, err:%v", err)
+		return
+	}
+	logs.Debug("init tailf succ")
 
 	logs.Debug("initialize success")
-	logs.Debug("load conf succ, config:%v", appConfig)
 }

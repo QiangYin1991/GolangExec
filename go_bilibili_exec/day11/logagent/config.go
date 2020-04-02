@@ -1,36 +1,25 @@
 package main
 
 import (
-	"github.com/astaxie/beego/config"
 	"fmt"
+	"github.com/astaxie/beego/config"
 	"src/github.com/pkg/errors"
+	"src/go_bilibili_exec/day11/logagent/model"
 )
 
 var (
-	appConfig *Config
+	appConfig *model.Config
 )
 
-type Config struct {
-	logLevel string
-	logPath	 string
-
-	CollectConf []CollectConf
-}
-
-type CollectConf struct {
-	logPath string
-	topic 	string
-}
-
 func loadCollectConf(conf config.Configer) (err error) {
-	var cc CollectConf
-	cc.logPath = conf.String("collect::log_path")
-	if len(cc.logPath) == 0 {
+	var cc model.CollectConf
+	cc.LogPath = conf.String("collect::log_path")
+	if len(cc.LogPath) == 0 {
 		err = errors.New("invalid collect::log_path")
 		return
 	}
-	cc.topic = conf.String("collect::topic")
-	if len(cc.topic) == 0 {
+	cc.Topic = conf.String("collect::topic")
+	if len(cc.Topic) == 0 {
 		err = errors.New("invalid collect::topic")
 		return
 	}
@@ -46,15 +35,15 @@ func loadConf(confType, filename string) (err error) {
 		return
 	}
 
-	appConfig = &Config{}
+	appConfig = &model.Config{}
 
-	appConfig.logLevel = conf.String("logs::log_level")
-	if len(appConfig.logLevel) == 0 {
-		appConfig.logLevel = "debug"
+	appConfig.LogLevel = conf.String("logs::log_level")
+	if len(appConfig.LogLevel) == 0 {
+		appConfig.LogLevel = "debug"
 	}
-	appConfig.logPath = conf.String("logs::log_path")
-	if len(appConfig.logPath) == 0 {
-		appConfig.logPath = "./logs"
+	appConfig.LogPath = conf.String("logs::log_path")
+	if len(appConfig.LogPath) == 0 {
+		appConfig.LogPath = "./logs"
 	}
 
 	err = loadCollectConf(conf)

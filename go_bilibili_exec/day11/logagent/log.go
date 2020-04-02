@@ -24,8 +24,8 @@ func convertLogLevel(level string) int {
 
 func initLogger() (err error) {
 	config := make(map[string]interface{})
-	config["filename"] = appConfig.logPath
-	config["level"] = convertLogLevel(appConfig.logLevel)
+	config["filename"] = appConfig.LogPath
+	config["level"] = convertLogLevel(appConfig.LogLevel)
 
 	configStr, err := json.Marshal(config)
 	if err != nil {
