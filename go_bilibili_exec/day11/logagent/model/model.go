@@ -6,6 +6,7 @@ type Config struct {
 	LogLevel string
 	LogPath  string
 
+	ChanSize    int
 	CollectConf []CollectConf
 }
 
@@ -17,4 +18,9 @@ type CollectConf struct {
 type TailObj struct {
 	Tail *tail.Tail
 	Conf CollectConf
+}
+
+type TextMsg struct {
+	Msg   string
+	Topic string
 }

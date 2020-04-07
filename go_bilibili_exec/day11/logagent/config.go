@@ -24,6 +24,7 @@ func loadCollectConf(conf config.Configer) (err error) {
 		return
 	}
 
+
 	appConfig.CollectConf = append(appConfig.CollectConf, cc)
 	return
 }
@@ -44,6 +45,12 @@ func loadConf(confType, filename string) (err error) {
 	appConfig.LogPath = conf.String("logs::log_path")
 	if len(appConfig.LogPath) == 0 {
 		appConfig.LogPath = "./logs"
+	}
+
+	appConfig.ChanSize, err = conf.Int("logs::chan_size")
+	if err != nil {
+		fmt.Printf("load logs chan_size failed, err:%v\n", err)
+		return
 	}
 
 	err = loadCollectConf(conf)
