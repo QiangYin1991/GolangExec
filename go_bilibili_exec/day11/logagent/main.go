@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/astaxie/beego/logs"
+	"src/go_bilibili_exec/day11/logagent/kafka"
 	"src/go_bilibili_exec/day11/logagent/tailf"
 )
 
@@ -27,6 +28,13 @@ func main() {
 		return
 	}
 	logs.Debug("init tailf succ")
+
+	err = kafka.InitKafka(appConfig.KafkaAddr)
+	if err != nil {
+		logs.Error("init kafaka failed, err:%v", err)
+		return
+	}
+	logs.Debug("init kafka succ ")
 
 	logs.Debug("initialize success")
 

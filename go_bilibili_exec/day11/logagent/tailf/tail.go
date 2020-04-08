@@ -2,18 +2,25 @@ package tailf
 
 import (
 	"fmt"
+	"github.com/astaxie/beego/logs"
 	"github.com/qiangyin1991/tail"
 	"src/go_bilibili_exec/day11/logagent/model"
+	"time"
 )
 
 type TailObjMgr struct {
-	tails []*model.TailObj
+	tails   []*model.TailObj
 	msgChan chan *model.TextMsg
 }
 
 var (
 	tailObjMgr *TailObjMgr
 )
+
+func GetOneLine() (msg *model.TextMsg) {
+	msg = <-tailObjMgr.msgChan
+	return
+}
 
 func InitTail(cConfig []model.CollectConf, chanSize int) (err error) {
 	if len(cConfig) == 0 {
@@ -22,7 +29,7 @@ func InitTail(cConfig []model.CollectConf, chanSize int) (err error) {
 	}
 
 	tailObjMgr = &TailObjMgr{
-		msgChan:make(chan*model.TextMsg, chanSize),
+		msgChan: make(chan *model.TextMsg, chanSize),
 	}
 	for _, v := range cConfig {
 		obj := &model.TailObj{
@@ -30,10 +37,10 @@ func InitTail(cConfig []model.CollectConf, chanSize int) (err error) {
 		}
 
 		tails, errTail := tail.TailFile(v.LogPath, tail.Config{
-			ReOpen:      true,
-			MustExist:   false,
-			Poll:        true,
-			Follow:      true,
+			ReOpen:    true,
+			MustExist: false,
+			Poll:      true,
+			Follow:    true,
 		})
 		if errTail != nil {
 			err = errTail
@@ -42,17 +49,24 @@ func InitTail(cConfig []model.CollectConf, chanSize int) (err error) {
 		obj.Tail = tails
 		tailObjMgr.tails = append(tailObjMgr.tails, obj)
 
-		go readFromTail(tails)
+		go readFromTail(obj)
 	}
 	return
 }
 
-func readFromTail(tail *tail.Tail) {
+func readFromTail(tailObj *model.TailObj) {
 	for true {
-		msg, ok := <-tail.Lines
+		msg, ok := <-tailObj.Tail.Lines
 		if !ok {
-			fmt.Printf("tail file close reopen, filename:%s\n", tail.Filename)
+			logs.Warn("tail file close reopen, filename:%s\n", tailObj.Tail.Filename)
+			time.Sleep(100 * time.Millisecond)
 			continue
 		}
+
+		testMsg := &model.TextMsg{
+			Topic: tailObj.Conf.Topic,
+			Msg:   msg.Text,
+		}
+		tailObjMgr.msgChan <- testMsg
 	}
 }

@@ -8,6 +8,7 @@ type Config struct {
 
 	ChanSize    int
 	CollectConf []CollectConf
+	KafkaAddr	string
 }
 
 type CollectConf struct {

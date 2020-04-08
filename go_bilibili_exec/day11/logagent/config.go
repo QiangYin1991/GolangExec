@@ -53,6 +53,12 @@ func loadConf(confType, filename string) (err error) {
 		return
 	}
 
+	appConfig.KafkaAddr = conf.String("kafka::server_addr")
+	if len(appConfig.KafkaAddr) == 0 {
+		err = fmt.Errorf("invalid kafka addr")
+		return
+	}
+
 	err = loadCollectConf(conf)
 	if err != nil {
 		fmt.Printf("load collect conf failed, err:%v\n", err)
