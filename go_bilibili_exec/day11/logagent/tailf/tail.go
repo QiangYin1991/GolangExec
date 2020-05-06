@@ -19,6 +19,7 @@ var (
 
 func GetOneLine() (msg *model.TextMsg) {
 	msg = <-tailObjMgr.msgChan
+	fmt.Println("msg: ", msg.Msg)
 	return
 }
 
@@ -33,7 +34,7 @@ func InitTail(cConfig []model.CollectConf, chanSize int) (err error) {
 	}
 	for _, v := range cConfig {
 		obj := &model.TailObj{
-			Conf: model.CollectConf{},
+			Conf: v,
 		}
 
 		tails, errTail := tail.TailFile(v.LogPath, tail.Config{

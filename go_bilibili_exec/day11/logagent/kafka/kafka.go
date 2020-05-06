@@ -34,6 +34,6 @@ func Send2Kafka(data, topic string) (err error) {
 		logs.Error("send message failed, err:%v", err)
 		return
 	}
-	logs.Info("send succ, pid:%v offset:%v\n, topic:%v\n", pid, offset, topic)
+	logs.Info("send succ, pid:%v offset:%v, topic:%v\n", pid, offset, topic)
 	return
 }
